@@ -342,7 +342,7 @@ def perform_deauth_net_function(option: MenuOptionEnum,
                 GUIManager().clear_screen()
                 GUIManager().print(WIFI_ADAPTER_ERROR_MESSAGE)
 
-        # Clear the black list
+        # Clear the blacklist
         case MenuOptionEnum.CLEAR_BLACK_LIST:
             if len(deauth_guardian.get_black_listed_ap_mac_set()) == 0:
                 GUIManager().print("Black list already empty.\n")
