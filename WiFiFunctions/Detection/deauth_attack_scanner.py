@@ -18,7 +18,7 @@ class DeauthAttackScanner(AbstractScanner):
 
     def __init__(self, wireless_adapter_key: str, channel_change_delay: float,
                  access_point_set: MutableSet[AccessPoint], deauth_frames_per_second_threshold: float,
-                 table_title: str = "Scan For Deauth Frames"):
+                 table_title: str = "Scanning For De-authentication Packets"):
         """
         Initializes the DeauthAttackScanner object.
         :param wireless_adapter_key: The key of the wireless interface (e.g. "wlan0")
