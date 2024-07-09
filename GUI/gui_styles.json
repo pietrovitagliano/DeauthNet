@@ -1,0 +1,32 @@
+{
+    "console": {
+        "color_system": "auto",
+        "tab_size": 4,
+        "force_terminal": true,
+        "style": "white"
+    },
+    "main_menu": {
+        "panel": {
+            "title_align": "center",
+            "style": "bold",
+            "expand": true
+        },
+        "text": {
+            "justify": "left",
+            "no_wrap": true
+        }
+    },
+    "table_style": {
+        "table": {
+            "title_style": "bold",
+            "title_justify": "left",
+            "header_style": "bold",
+            "expand": true
+        },
+        "column": {
+            "justify": "center",
+            "vertical": "top",
+            "no_wrap": true
+        }
+    }
+}

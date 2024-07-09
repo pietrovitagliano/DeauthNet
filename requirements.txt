@@ -1,0 +1,3 @@
+scapy >= 2.5.0
+sortedcontainers >= 2.4.0
+rich >= 13.7.1
