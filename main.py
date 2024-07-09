@@ -13,7 +13,7 @@ from WiFiFunctions.Detection.deauth_attack_scanner import DeauthAttackScanner
 from WiFiFunctions.Deauthentication.wifi_deauthenticator import WiFiDeauthenticator
 
 from Core.access_point import AccessPoint
-from WiFiFunctions.WiFiScan.access_point_scanner import AccessPointScanner
+from WiFiFunctions.AccessPointScan.access_point_scanner import AccessPointScanner
 from WiFiFunctions.Detection.deauth_guardian import DeauthGuardian
 
 from WiFiFunctions.wireless_utility import (set_wireless_adapter_mode, WirelessAdapterModeEnum,

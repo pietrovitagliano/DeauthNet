@@ -56,4 +56,13 @@ class BlackListManager:
 
         add_remove_option: str = "-A" if put_in_blacklist else "-D"
 
-        return f"sudo ebtables {add_remove_option} INPUT -p 0x888e --src {access_point_mac} -j DROP"
+        # The command to put the access point in the blacklist
+        # INPUT: The packet is going to be received by the host
+        # FORWARD: The packet is going to be forwarded by the host
+        # -p 0x888e: The packet is an EAPOL packet (0x888e is the Ethertype of EAPOL packets)
+        # --src: The source MAC address of the packet
+        # -j DROP: Drop the packet
+        input_rule: str = f"sudo ebtables {add_remove_option} INPUT -p 0x888e --src {access_point_mac} -j DROP"
+        forward_rule: str = f"sudo ebtables {add_remove_option} FORWARD -p 0x888e --src {access_point_mac} -j DROP"
+
+        return f"{input_rule} && {forward_rule}"
