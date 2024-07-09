@@ -1,5 +1,0 @@
-{
-    "access_point_channel_change_delay": 0.15,
-    "deauth_attack_channel_change_delay": 0.35,
-    "deauth_frames_per_second_threshold": 15
-}
