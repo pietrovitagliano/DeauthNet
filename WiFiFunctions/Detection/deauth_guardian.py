@@ -56,23 +56,9 @@ class DeauthGuardian(DeauthAttackScanner):
 
         super()._process_deauth_packet(packet=packet)
 
-        # Get the MAC addresses of the access points under attack and put them in the blacklist
+        # Get the MAC addresses of the access points under attack and put them in blacklist
         ap_to_put_in_black_list = self._get_attacked_victims_by_ap_dict().keys()
-        # CORRECT LINE
-        #self._black_list_manager.add_to_blacklist(*ap_to_put_in_black_list)
-
-        # WRONG LINES
-        for access_point_mac in ap_to_put_in_black_list:
-            self._add_to_blacklist(access_point_mac=access_point_mac)
-
-    # DELETE THIS METHOD
-    def _add_to_blacklist(self, access_point_mac: str):
-        """
-        Add the access point with the given MAC address to the blacklist, if it is not already there.
-        :param access_point_mac: The MAC address of the access point to put in the blacklist
-        """
-
-        self._black_list_manager.add_to_blacklist(access_point_mac)
+        self._black_list_manager.add_to_blacklist(*ap_to_put_in_black_list)
 
     def _info_to_table(self) -> Optional[Table]:
         # Get the dictionary containing the MAC addresses of the victims under attack for each access point
