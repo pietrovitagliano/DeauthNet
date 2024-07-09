@@ -56,7 +56,7 @@ class DeauthGuardian(DeauthAttackScanner):
 
         super()._process_deauth_packet(packet=packet)
 
-        # Get the MAC addresses of the access points under attack and put them in blacklist
+        # Get the MAC addresses of the access points under attack
         ap_to_put_in_black_list = self._get_attacked_victims_by_ap_dict().keys()
         self._black_list_manager.add_to_blacklist(*ap_to_put_in_black_list)
 
