@@ -14,3 +14,12 @@ class RequirementInstallationFailedException(BaseException):
 
     def __init__(self, message: str = None):
         super().__init__(message)
+
+
+class WirelessAdapterNotFoundException(BaseException):
+    """
+    Exception raised when the wireless adapter is not found.
+    """
+
+    def __init__(self, message: str = None):
+        super().__init__(message)

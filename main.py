@@ -20,7 +20,9 @@ from WiFiFunctions.wireless_utility import (set_wireless_adapter_mode, WirelessA
                                             BROADCAST_MAC, MAC_REGEX_PATTERN,
                                             WIFI_ADAPTER_ERROR_MESSAGE, check_and_set_wifi_adapter_mode)
 
-from exceptions import NoRootPrivilegesException, RequirementInstallationFailedException
+from exceptions import (NoRootPrivilegesException,
+                        RequirementInstallationFailedException,
+                        WirelessAdapterNotFoundException)
 from utility import find_file
 
 
@@ -30,8 +32,10 @@ def root_privileges_check():
     """
 
     if os.geteuid() != 0:
-        raise NoRootPrivilegesException(message=f"Root privileges are required to run this script.\n"
-                                                f"Please try again with root privileges.")
+        raise NoRootPrivilegesException(
+            message=f"Root privileges are required to run this script.\n"
+                    f"Please try again with root privileges.\n"
+        )
 
 
 def check_python_min_version(major: int, minor: int):
@@ -43,7 +47,7 @@ def check_python_min_version(major: int, minor: int):
     """
 
     if sys.version_info < (major, minor):
-        raise ValueError(f"This project requires Python {major}.{minor} or higher. Please upgrade Python.")
+        raise ValueError(f"This project requires Python {major}.{minor} or higher. Please upgrade Python.\n")
 
 
 def check_and_install_tool(*tool_names: tuple[str, str]):
@@ -66,26 +70,17 @@ def check_and_install_tool(*tool_names: tuple[str, str]):
                     subprocess.call(command, stderr=subprocess.PIPE, shell=True)
 
         except subprocess.CalledProcessError as e:
-            raise RequirementInstallationFailedException(f"An error occurred during the installation of {package}: {e}")
+            raise RequirementInstallationFailedException(
+                message=f"An error occurred during the installation of {package}: {e}\n"
+            )
 
 
-def get_user_choice(message: str = "Enter your choice: ") -> str:
+def wireless_adapter_presence_check(wireless_adapter_key: str, check_attempts: int = 3):
     """
-    Get the user's input.
-    :param message: The message to show to the user
-    :return: The input of the user
-    """
-
-    return input(message)
-
-
-def wireless_adapter_presence_check(wireless_adapter_key: str, check_attempts: int = 3) -> bool:
-    """
-    Check if the given wireless adapter is present.
+    Check if the given wireless adapter is present and raise an exception if it is not.
 
     :param wireless_adapter_key: The key of the wireless adapter, i.e. wlan0, wlan1, etc.
     :param check_attempts: The number of attempts to check if the wireless adapter is present.
-    :return: True if the wireless adapter is present, False otherwise.
     """
 
     # If NetworkManager is not active, activate it
@@ -114,7 +109,21 @@ def wireless_adapter_presence_check(wireless_adapter_key: str, check_attempts: i
         if is_present:
             break
 
-    return is_present
+    if not is_present:
+        raise WirelessAdapterNotFoundException(
+            message=f"Wireless adapter {wireless_adapter_key} not found.\n"
+                    f"Please check if the wireless adapter is connected and try again.\n"
+        )
+
+
+def get_user_choice(message: str = "Enter your choice: ") -> str:
+    """
+    Get the user's input.
+    :param message: The message to show to the user
+    :return: The input of the user
+    """
+
+    return input(message)
 
 
 def initialize_wireless_adapter(wireless_adapter_key: str):
@@ -350,22 +359,16 @@ def main(wireless_adapter_key: str):
     """
     Main function.
     :param wireless_adapter_key: The key of the wireless adapter to use, i.e. wlan0, wlan1, etc.
-    :raises FileNotFoundError: If the json file needed to create the WiFiDeAuth object cannot be found.
-    :raises NoWirelessInterfaceFoundException: If no wireless adapter is found.
+    :raises FileNotFoundError: If the json file needed by the initialize_essential_objects function cannot be found.
     """
 
     try:
-        # Check if at least one wireless adapter is present
-        if not wireless_adapter_presence_check(wireless_adapter_key):
-            GUIManager().print(f"Wireless adapter {wireless_adapter_key} not found.\n"
-                               f"Please check if the wireless adapter is connected and try again.\n")
-            return
+        initialize_wireless_adapter(wireless_adapter_key=wireless_adapter_key)
 
-        GUIManager().print(f"Wireless adapter {wireless_adapter_key} found.")
-        initialize_wireless_adapter(wireless_adapter_key)
-
-        (access_point_scanner, deauth_attack_scanner,
-         deauth_guardian, wifi_deauthenticator) = initialize_essential_objects(wireless_adapter_key=wireless_adapter_key)
+        (access_point_scanner,
+         deauth_attack_scanner,
+         deauth_guardian,
+         wifi_deauthenticator) = initialize_essential_objects(wireless_adapter_key=wireless_adapter_key)
 
         # Get the minimum and maximum value of the menu options
         option_min_value: int = MenuOptionEnum.get_min_option_value()
@@ -417,6 +420,7 @@ def main(wireless_adapter_key: str):
                 # Exit the while loop
                 break
 
+    # Used to exit the program pressing CTRL+C
     except KeyboardInterrupt:
         pass
 
@@ -426,22 +430,9 @@ def main(wireless_adapter_key: str):
                                         mode=WirelessAdapterModeEnum.MANAGED,
                                         verbose=True)
 
-        GUIManager().print("\nExiting...\n")
-        exit(0)
-
 
 # MAIN
 if __name__ == "__main__":
-    # Check if the software requirements are satisfied
-    try:
-        root_privileges_check()
-        check_python_min_version(major=3, minor=10)
-        check_and_install_tool(("ifconfig", "net-tools"), ("iwconfig", "wireless-tools"),
-                               ("ebtables", "ebtables"))
-    except NoRootPrivilegesException | ValueError | RequirementInstallationFailedException as e:
-        GUIManager().print(f"An error occurred: {e}")
-        exit(-1)
-
     # Create the argument parser to select the wireless adapter from the command line
     arg_parser = argparse.ArgumentParser()
 
@@ -455,11 +446,46 @@ if __name__ == "__main__":
     # Parse the arguments
     args = arg_parser.parse_args()
 
-    # Clear the screen and start the program
-    GUIManager().clear_screen()
+    # Check if the software requirements are satisfied and at least one wireless adapter is present
     try:
+        # Software requirements check
+        root_privileges_check()
+        check_python_min_version(major=3, minor=10)
+        check_and_install_tool(("ifconfig", "net-tools"), ("iwconfig", "wireless-tools"),
+                               ("ebtables", "ebtables"))
+
+        # Clear the screen
+        GUIManager().clear_screen()
+
+        # Wireless adapter check
+        wireless_adapter_presence_check(wireless_adapter_key=args.wireless_interface)
+
+    except (NoRootPrivilegesException, ValueError,
+            RequirementInstallationFailedException, WirelessAdapterNotFoundException) as e:
+        GUIManager().print(f"{e}")
+        exit(-1)
+
+    # Main function
+    try:
+        # Start the main function
+        GUIManager().print(f"Wireless adapter {args.wireless_interface} found.")
         main(wireless_adapter_key=args.wireless_interface)
+
+        # Exit the program
+        GUIManager().print("\nExiting...\n")
+        exit(0)
+
+    except SystemExit as e:
+        # If the exit code is 0, exit the program successfully,
+        # otherwise print the error message and exit with the specified code
+        if e.code != 0:
+            GUIManager().print(f"Error with code {e.code} occurred.")
+            exit(e.code)
+
+    except FileNotFoundError as e:
+        GUIManager().print(f"{e}")
+        exit(-1)
+
     except BaseException as e:
-        if not isinstance(e, SystemExit) or e.code != 0:
-            GUIManager().print(f"An error occurred: {e}")
-            exit(-1)
+        GUIManager().print(f"Not handled error occurred: {e}")
+        exit(-1)
