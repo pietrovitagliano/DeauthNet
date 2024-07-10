@@ -1,7 +1,7 @@
 # DeauthNet
 
 ## Disclaimer
-This software can potentially be used for malicious and unethical purposes. Therefore, I, Pietro Vitagliano, the author of Deauth Net and owner of this repository, assume no responsibility for any improper or harmful use of this software. The tool has been developed exclusively for the ethical purposes described in my thesis, and any usage violating these principles is neither supported nor endorsed.
+This software can potentially be used for malicious and unethical purposes. Therefore, I, Pietro Vitagliano, the author of Deauth Net and owner of this repository, assume no responsibility for any improper or harmful use of this software. The tool has been developed exclusively for ethical purposes and any usage violating these principles is neither supported nor endorsed.
 
 ## Software Description
 Deauth Net is a software designed and developed entirely by the owner of this repository, Pietro Vitagliano, as master’s thesis project in Computer Science at the University of Sannio in Benevento, within the scope of Security of Networks and Software Systems. It has been developed to perform deauthentication attacks, in order to demonstrate how easily such an attack can be executed and to provide tools for detecting and blocking this kind of attacks on the machine where the software is running, making it a comprehensive solution for evaluating and identifying deauthentication attacks on Wi-Fi networks.
@@ -44,7 +44,7 @@ Before utilizing any of the three primary functionalities, an initial scan of ne
 Deauth Net provides three primary functionalities, besides the access point scan:
 1.	Deauthentication Attack: This feature allows the execution of deauthentication attacks.
 2.	Attack Detection: This feature detects deauthentication attacks using a sliding time window to monitor the number of deauthentication packets associated with a particular access point.
-3.	Attack Blocking: An extension of the detection feature, this functionality not only detects but also blocks attacks by blacklisting the offending access point.
+3.	Attack Blocking: An extension of the detection feature, this functionality not only detects but also blocks attacks, by blacklisting the attacked access points.
 
 ### Attack Mechanism
 The attack mechanism of Deauth Net is designed to disrupt network connectivity by forcing clients to disconnect from access points. When initiating an attack, users select a specific access point, but Deauth Net extends its impact to all access points within the same mesh network, illustrating how easy is to affect an entire mesh network’s integrity. Once a target access point is chosen, the software continuously sends deauthentication packets across all associated frequencies, such as both 2.4 GHz and 5 GHz bands, simultaneously disrupting connectivity. It’s crucial to emphasize that Deauth Net is intended for ethical purposes only, such as educational or research contexts and any unauthorized or malicious use of this tool is explicitly disclaimed and unsupported by the author.
@@ -56,4 +56,4 @@ The detection mechanism relies on a time window to count the number of deauthent
 The blocking feature extends the detection functionality by adding the ability to blacklist an access point when an attack is detected.
 
 ## License
-This software is released under the GPL-3 license, which allows for its use, modification, and distribution according to the terms of this license, requiring that any modifications made to the software must reference the original author.
+This software is released under the GPL-3 license, which allows for its use, modification and distribution according to the terms of this license, requiring that any modifications made to this software must reference Pietro Vitagliano, the original author.
