@@ -1,10 +1,16 @@
 # DeauthNet
 
-### Disclaimer
+## Disclaimer
 This software can potentially be used for malicious and unethical purposes. Therefore, I, Pietro Vitagliano, the author of Deauth Net and owner of this repository, assume no responsibility for any improper or harmful use of this software. The tool has been developed exclusively for the ethical purposes described in my thesis, and any usage violating these principles is neither supported nor endorsed.
 
-### Software Description
-Deauth Net is a software designed and developed entirely by the author of this repository, Pietro Vitagliano, as master’s thesis project in Computer Science at the University of Sannio in Benevento, within the scope of Security of Networks and Software Systems. It has been developed to perform deauthentication attacks, in order to demonstrate how easily such an attack can be executed and to provide tools for detecting and blocking this kind of attacks on the machine where the software is running, making it a comprehensive solution for evaluating and identifying deauthentication attacks on Wi-Fi networks.
+## Software Description
+Deauth Net is a software designed and developed entirely by the owner of this repository, Pietro Vitagliano, as master’s thesis project in Computer Science at the University of Sannio in Benevento, within the scope of Security of Networks and Software Systems. It has been developed to perform deauthentication attacks, in order to demonstrate how easily such an attack can be executed and to provide tools for detecting and blocking this kind of attacks on the machine where the software is running, making it a comprehensive solution for evaluating and identifying deauthentication attacks on Wi-Fi networks.
+
+## Credits
+Deauth Net relies on the following python packages:
+-	Scapy: Developed by Philippe Biondi, Scapy is a powerful Python library used for packet manipulation and network analysis.
+-	Sortedcontainers: Created by Grant Jenks, this library provides fast and efficient sorted collections.
+-	Rich: Developed by Will McGugan, Rich is a library for rendering rich text and advanced formatting in the terminal.
 
 ## Getting Started
 ### Dependencies
