@@ -38,13 +38,16 @@ To install these dependencies, from the project root directory, open your termin
 
 ## Usage
 ### Initial Setup
-Before utilizing any of the three primary functionalities, an initial scan of nearby access points must be conducted, that is the first functionality the software allows to perform. This scanning feature uses Scapy to detect nearby networks, which can then be targeted for attacks, or used for detection and blocking purposes.
+Before utilizing any of the three primary functionalities, an initial scan of nearby access points must be conducted, facilitated through the software’s scanning feature utilizing Scapy. Users can customize the scanning process by modifying the /Core/WiFiBandManager/wifi_band_manager_settings.json file, that specifies the frequency bands to scan. This customization allows to scan for specific frequency bands, on which subsequently the attacking, detection and blocking functionalities of the software will focus. This approach ensures flexibility in evaluating and mitigating potential vulnerabilities across desired network frequencies.
 
 ### Main Features
 Deauth Net provides three primary functionalities, besides the access point scan:
 1.	Deauthentication Attack: This feature allows the execution of deauthentication attacks.
 2.	Attack Detection: This feature detects deauthentication attacks using a sliding time window to monitor the number of deauthentication packets associated with a particular access point.
 3.	Attack Blocking: An extension of the detection feature, this functionality not only detects but also blocks attacks by blacklisting the offending access point.
+
+### Attack Mechanism
+The attack mechanism of Deauth Net is designed to disrupt network connectivity by forcing clients to disconnect from access points. When initiating an attack, users select a specific access point, but Deauth Net extends its impact to all access points within the same mesh network, illustrating how easy is to affect an entire mesh network’s integrity. Once a target access point is chosen, the software continuously sends deauthentication packets across all associated frequencies, such as both 2.4 GHz and 5 GHz bands, simultaneously disrupting connectivity. It’s crucial to emphasize that Deauth Net is intended for ethical purposes only, such as educational or research contexts and any unauthorized or malicious use of this tool is explicitly disclaimed and unsupported by the author.
 
 ### Detection Mechanism
 The detection mechanism relies on a time window to count the number of deauthentication packets associated with a specific access point within that window. Packets outside the window are discarded. If the number of packets exceeds a certain threshold, as defined in a project file, an attack is assumed to be in progress, and the detection functionality notifies the user.
