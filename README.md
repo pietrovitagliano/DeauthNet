@@ -16,18 +16,17 @@ Deauth Net is a software designed and developed entirely by the author of this r
 -	wireless-tools
 -	ebtables-tools
 
+To install these dependencies, execute the following commands in your terminal:
+
+	sudo apt-get update
+	sudo apt-get install -y net-tools wireless-tools ebtables
+
 #### Python Packages
 -	scapy >= 2.5.0
 -	sortedcontainers >= 2.4.0
 -	rich >= 13.7.1
 
-#### Dependencies Installation
-Open you terminal and execute the following commands:
-
-	sudo apt-get update
-	sudo apt-get install -y net-tools wireless-tools ebtables
-
-From the root directory of Deauth Net, execute the following commands in your terminal:
+To install these dependencies, from the project root directory, open your terminal and execute the following command:
 
 	pip install -r requirements.txt
 
