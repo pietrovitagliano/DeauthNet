@@ -14,7 +14,7 @@ Deauth Net relies on the following python packages:
 
 ## Getting Started
 ### Dependencies
--	Linux
+-	A Linux distribution (Ubuntu, Debian, etc)
 -	Python 3.10 or higher
 
 #### Linux System Dependencies
