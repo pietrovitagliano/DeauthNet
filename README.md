@@ -15,6 +15,7 @@ Deauth Net relies on the following python packages:
 ## Getting Started
 ### Dependencies
 -	A Linux distribution (Ubuntu, Debian, etc)
+-   A wireless network adapter that supports monitor mode (if the Linux distribution is running on a virtual machine, you need to use an external wireless network adapter)
 -	Python 3.10 or higher
 
 #### Linux System Dependencies
