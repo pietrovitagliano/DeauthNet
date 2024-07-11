@@ -6,7 +6,7 @@ from scapy.packet import Packet
 from GUI.gui_manager import GUIManager
 from WiFiFunctions.Detection.deauth_attack_scanner import DeauthAttackScanner
 from Core.access_point import AccessPoint
-from WiFiFunctions.black_list_manager import BlackListManager
+from Core.black_list_manager import BlackListManager
 
 
 class DeauthGuardian(DeauthAttackScanner):

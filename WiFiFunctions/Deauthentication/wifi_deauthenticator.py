@@ -7,7 +7,7 @@ from scapy.packet import Packet
 from scapy.layers.dot11 import RadioTap, Dot11, Dot11Deauth
 from scapy.sendrecv import sendp
 
-from WiFiFunctions.black_list_manager import BlackListManager
+from Core.black_list_manager import BlackListManager
 from utility import change_channel_from_shell
 from GUI.gui_manager import GUIManager
 from Core.access_point import AccessPoint
