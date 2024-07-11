@@ -27,8 +27,9 @@ from scapy.sendrecv import AsyncSniffer
 from GUI.gui_manager import GUIManager
 from Core.WiFiBandManager.wifi_band_manager import WiFiBandManager
 from Core.access_point import AccessPoint
-from WiFiFunctions.wireless_utility import check_and_set_wifi_adapter_mode, WirelessAdapterModeEnum, get_known_ssids, \
-    change_known_ssids_autoconnection_state, is_wireless_adapter_connected, disconnect_wireless_adapter
+from WiFiFunctions.wireless_utility import (check_and_set_wifi_adapter_mode, WirelessAdapterModeEnum,
+                                            get_known_ssids, change_known_ssids_autoconnection_state,
+                                            is_wireless_adapter_connected, disconnect_wireless_adapter)
 
 
 class AbstractScanner(ABC):
