@@ -94,7 +94,6 @@ def check_and_install_tool(*tool_names: tuple[str, str]):
 def wireless_adapter_presence_check(wireless_adapter_key: str, check_attempts: int = 3):
     """
     Check if the given wireless adapter is present and raise an exception if it is not.
-
     :param wireless_adapter_key: The key of the wireless adapter, i.e. wlan0, wlan1, etc.
     :param check_attempts: The number of attempts to check if the wireless adapter is present.
     """
