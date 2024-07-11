@@ -56,4 +56,4 @@ The detection mechanism relies on a time window to count the number of deauthent
 The blocking feature extends the detection functionality by adding the ability to blacklist an access point when an attack is detected.
 
 ## License
-This software is released under the GPL-3 license, which allows for its use, modification, and distribution according to the terms of this license. In compliance with the GPL-3 license, any distribution or modification of this software must give credit to Pietro Vitagliano, the original author.
+This software is released under the GPL-3 license, which allows for its use, modification and distribution according to the terms of this license. In compliance with the GPL-3 license, any distribution or modification of this software must give credit to Pietro Vitagliano, the original author.
