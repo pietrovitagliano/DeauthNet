@@ -25,12 +25,13 @@ import time
 from typing import MutableSet, Optional
 
 from GUI.gui_manager import MenuOptionEnum, GUIManager
-from WiFiFunctions.Detection.deauth_attack_scanner import DeauthAttackScanner
-from WiFiFunctions.Deauthentication.wifi_deauthenticator import WiFiDeauthenticator
 
 from Core.access_point import AccessPoint
+from Core.abstract_scanner import AbstractScanner
 from WiFiFunctions.NetworkScan.access_point_scanner import AccessPointScanner
+from WiFiFunctions.Detection.deauth_attack_scanner import DeauthAttackScanner
 from WiFiFunctions.Detection.deauth_guardian import DeauthGuardian
+from WiFiFunctions.Deauthentication.wifi_deauthenticator import WiFiDeauthenticator
 
 from WiFiFunctions.wireless_utility import (set_wireless_adapter_mode, WirelessAdapterModeEnum,
                                             BROADCAST_MAC, MAC_REGEX_PATTERN,
@@ -231,28 +232,39 @@ def get_info_for_deauth_attack(access_point_set: MutableSet[AccessPoint]) -> Opt
     return target_ssid_set, victim_mac_set
 
 
-def initialize_essential_objects(wireless_adapter_key: str, scan_settings_json_file: str = "scan_settings.json") -> (
-        tuple[AccessPointScanner, DeauthAttackScanner, DeauthGuardian, WiFiDeauthenticator]):
+def initialize_essential_objects(wireless_adapter_key: str, settings_json_file: str = "general_settings.json"):
     """
     Initialize and return the essential objects to perform the software's functionalities.
     In order these are: AccessPointScanner, DeauthAttackScanner, DeauthGuardian and WiFiDeauthenticator.
     :param wireless_adapter_key: The key of the wireless adapter to use, i.e. wlan0, wlan1, etc.
-    :param scan_settings_json_file: The name of the JSON file that contains the scan settings
-    :return: A tuple containing AccessPointScanner, DeauthAttackScanner, DeauthGuardian and WiFiDeauthenticator objects.
+    :param settings_json_file: The name of the JSON file that contains the software functionalities settings.
     :raises FileNotFoundError: If the scan settings file is not found.
     """
 
-    scan_settings_abs_file_path: str = find_file(file_name=scan_settings_json_file)
-    if not os.path.exists(scan_settings_abs_file_path):
-        raise FileNotFoundError(f"Settings file {scan_settings_json_file}\n"
+    global access_point_scanner, deauth_attack_scanner, deauth_guardian, wifi_deauthenticator
+
+    settings_abs_file_path: str = find_file(file_name=settings_json_file)
+    if not os.path.exists(settings_abs_file_path):
+        raise FileNotFoundError(f"Settings file {settings_json_file}\n"
                                 f"not found in the project directory")
 
-    with open(scan_settings_abs_file_path) as json_file:
-        scan_settings_dict: dict = json.load(json_file)
+    # Open the JSON file and get the settings from it
+    with open(settings_abs_file_path) as json_file:
+        settings_dict: dict = json.load(json_file)
 
-    access_point_channel_change_delay: float = scan_settings_dict["access_point_channel_change_delay"]
-    deauth_attack_channel_change_delay: float = scan_settings_dict["deauth_attack_channel_change_delay"]
-    deauth_frames_per_second_threshold: float = scan_settings_dict["deauth_frames_per_second_threshold"]
+        # Get the settings for the access point scan
+        access_point_scan_settings_dict: dict = settings_dict["access_point_scan_settings"]
+        access_point_channel_change_delay: float = access_point_scan_settings_dict["channel_change_delay"]
+
+        # Get the settings for the de-authentication attack detection
+        detect_settings_dict: dict = settings_dict["detection_settings"]
+        deauth_attack_channel_change_delay: float = detect_settings_dict["channel_change_delay"]
+        deauth_frames_per_second_threshold: float = detect_settings_dict["frames_per_second_threshold"]
+
+        # Get the settings for the de-authentication attack execution
+        deauth_settings_dict: dict = settings_dict["deauth_settings"]
+        count: int = deauth_settings_dict["count"]
+        interval: float = deauth_settings_dict["interval"]
 
     # Create the AccessPointScanner, DeauthAttackScanner, WiFiSentinel and WiFiDeauthenticator objects
     # to perform the software's functionalities
@@ -269,25 +281,18 @@ def initialize_essential_objects(wireless_adapter_key: str, scan_settings_json_f
                                      deauth_frames_per_second_threshold=deauth_frames_per_second_threshold,
                                      access_point_set=access_point_scanner.access_point_set)
 
-    wifi_deauth = WiFiDeauthenticator(wireless_adapter_key=wireless_adapter_key,
-                                      access_point_set=access_point_scanner.access_point_set)
+    wifi_deauthenticator = WiFiDeauthenticator(wireless_adapter_key=wireless_adapter_key,
+                                               access_point_set=access_point_scanner.access_point_set,
+                                               count=count, interval=interval)
 
-    return access_point_scanner, deauth_attack_scanner, deauth_guardian, wifi_deauth
 
-
-def perform_deauth_net_function(option: MenuOptionEnum,
-                                access_point_scanner: AccessPointScanner,
-                                deauth_attack_scanner: DeauthAttackScanner,
-                                deauth_guardian: DeauthGuardian,
-                                wifi_deauthenticator: WiFiDeauthenticator):
+def perform_deauth_net_function(option: MenuOptionEnum):
     """
     Choose the function to perform, based on the user's input.
     :param option: The user's input converted to a MenuOptionEnum object
-    :param access_point_scanner: The AccessPointScanner object to scan for access points
-    :param deauth_attack_scanner: The DeauthAttackScanner object to intercept de-authentication attacks
-    :param deauth_guardian: The DeauthGuardian object to intercept and block de-authentication attacks
-    :param wifi_deauthenticator: The WiFiDeauthenticator object to perform de-authentication attacks
     """
+
+    global access_point_scanner, deauth_attack_scanner, deauth_guardian, wifi_deauthenticator
 
     # Choose the function to perform, based on the user's input
     match option:
@@ -340,14 +345,6 @@ def perform_deauth_net_function(option: MenuOptionEnum,
                 GUIManager().clear_screen()
                 GUIManager().print(WIFI_ADAPTER_ERROR_MESSAGE)
 
-        # Clear the blacklist
-        case MenuOptionEnum.CLEAR_BLACK_LIST:
-            if len(deauth_guardian.get_black_listed_ap_mac_set()) == 0:
-                GUIManager().print("Black list already empty.\n")
-            else:
-                deauth_guardian.clear_blacklist()
-                GUIManager().print("Black list cleared.\n")
-
         # Avoid the execution of other cases
         case _:
             pass
@@ -361,13 +358,6 @@ def main(wireless_adapter_key: str):
     """
 
     try:
-        initialize_wireless_adapter(wireless_adapter_key=wireless_adapter_key)
-
-        (access_point_scanner,
-         deauth_attack_scanner,
-         deauth_guardian,
-         wifi_deauthenticator) = initialize_essential_objects(wireless_adapter_key=wireless_adapter_key)
-
         # Get the minimum and maximum value of the menu options
         option_min_value: int = MenuOptionEnum.get_min_option_value()
         option_max_value: int = MenuOptionEnum.get_max_option_value()
@@ -404,11 +394,7 @@ def main(wireless_adapter_key: str):
 
                 # Perform the function chosen by the user
                 GUIManager().clear_screen()
-                perform_deauth_net_function(option=choosen_option,
-                                            access_point_scanner=access_point_scanner,
-                                            deauth_attack_scanner=deauth_attack_scanner,
-                                            deauth_guardian=deauth_guardian,
-                                            wifi_deauthenticator=wifi_deauthenticator)
+                perform_deauth_net_function(option=choosen_option)
 
                 GUIManager().clear_screen()
 
@@ -465,8 +451,20 @@ if __name__ == "__main__":
 
     # Main function
     try:
-        # Start the main function
+        # Initialize the wireless adapter
         GUIManager().print(f"Wireless adapter {args.wireless_interface} found.")
+        initialize_wireless_adapter(wireless_adapter_key=args.wireless_interface)
+
+        # Essential objects to perform the software's functionalities
+        access_point_scanner: Optional[AbstractScanner] = None
+        deauth_attack_scanner: Optional[AbstractScanner] = None
+        deauth_guardian: Optional[AbstractScanner] = None
+        wifi_deauthenticator: Optional[WiFiDeauthenticator] = None
+
+        # Initialize the essential objects
+        initialize_essential_objects(wireless_adapter_key=args.wireless_interface)
+
+        # Start the main function
         main(wireless_adapter_key=args.wireless_interface)
 
         # Exit the program

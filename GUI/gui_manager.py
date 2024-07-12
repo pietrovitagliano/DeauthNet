@@ -41,7 +41,6 @@ class MenuOptionEnum(Enum):
     DEAUTH_DOS_WIFI = 2
     DETECT_DEAUTH_ATTACKS = 3
     DETECT_AND_BLOCK_DEAUTH_ATTACKS = 4
-    CLEAR_BLACK_LIST = 5
 
     @classmethod
     def get_option_from_value(cls, value: int) -> Optional["MenuOptionEnum"]:
@@ -152,7 +151,6 @@ class GUIManager:
             f"{MenuOptionEnum.DEAUTH_DOS_WIFI.value} - De-authenticate Wi-Fi Networks\n"
             f"{MenuOptionEnum.DETECT_DEAUTH_ATTACKS.value} - Detect De-authentication Attacks\n"
             f"{MenuOptionEnum.DETECT_AND_BLOCK_DEAUTH_ATTACKS.value} - Detect and Block De-authentication Attacks\n"
-            f"{MenuOptionEnum.CLEAR_BLACK_LIST.value} - Clear Black List\n"
             f"\n"
             f"CTRL + C - Exit",
             **text_style_dict

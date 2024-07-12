@@ -1,0 +1,13 @@
+{
+    "access_point_scan_settings": {
+        "channel_change_delay": 0.15
+    },
+    "detection_settings": {
+        "channel_change_delay": 0.35,
+        "frames_per_second_threshold": 15
+    },
+    "deauth_settings": {
+        "count": 40,
+        "interval": 0.01
+    }
+}

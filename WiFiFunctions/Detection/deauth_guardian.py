@@ -17,8 +17,8 @@
 
 from typing import MutableSet, Optional
 
-from rich.table import Table
 from scapy.packet import Packet
+from rich.table import Table
 
 from GUI.gui_manager import GUIManager
 from WiFiFunctions.Detection.deauth_attack_scanner import DeauthAttackScanner
@@ -53,16 +53,6 @@ class DeauthGuardian(DeauthAttackScanner):
 
         # Set to store the MAC addresses of the access points in the blacklist
         self._black_list_manager: BlackListManager = BlackListManager()
-
-    def get_black_listed_ap_mac_set(self) -> set[str]:
-        return self._black_list_manager.black_listed_ap_mac_set
-
-    def clear_blacklist(self):
-        """
-        Clear the blacklist of access points.
-        """
-
-        self._black_list_manager.clear_blacklist()
 
     def _process_deauth_packet(self, packet: Packet):
         """

