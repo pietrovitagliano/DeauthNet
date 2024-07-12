@@ -225,18 +225,8 @@ def get_info_for_deauth_attack(access_point_set: MutableSet[AccessPoint]) -> Opt
                                "Deauth Attack aborted.\n")
             return None
 
-    # Collect all SSIDs related to the selected access points.
-    #
-    # This is done because:
-    #   1) the access point may have more than one mac address (one for each frequency);
-    #   2) in case of mesh networks, the same SSID can be shared by multiple access points.
-    target_ssid_set: set[str] = set()
-    for row_number in row_number_set:
-        # Get the SSID of the chosen access point
-        chosen_ssid: str = list(access_point_set)[row_number - 1].ssid
-
-        # Add the SSIDs to the target set
-        target_ssid_set.add(chosen_ssid)
+    # Collect all the selected access point SSIDs.
+    target_ssid_set: set[str] = {list(access_point_set)[row_number - 1].ssid for row_number in row_number_set}
 
     return target_ssid_set, victim_mac_set
 
