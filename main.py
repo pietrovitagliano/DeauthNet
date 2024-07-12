@@ -225,8 +225,9 @@ def get_info_for_deauth_attack(access_point_set: MutableSet[AccessPoint]) -> Opt
                                "Deauth Attack aborted.\n")
             return None
 
-    # Collect all the selected access point SSIDs.
-    target_ssid_set: set[str] = {list(access_point_set)[row_number - 1].ssid for row_number in row_number_set}
+    # Collect all the selected access point SSIDs
+    access_point_list: list[AccessPoint] = list(access_point_set)
+    target_ssid_set: set[str] = {access_point_list[row_number - 1].ssid for row_number in row_number_set}
 
     return target_ssid_set, victim_mac_set
 
