@@ -1,13 +1,13 @@
 # DeauthNet
 
 ## Disclaimer
-This software can potentially be used for malicious and unethical purposes. Therefore, I, Pietro Vitagliano, the author of Deauth Net and owner of this repository, assume no responsibility for any improper or harmful use of this software. This tool has been developed exclusively for ethical purposes and any usage that violates these principles is neither supported nor endorsed.
+This software can potentially be used for malicious and unethical purposes. Therefore, I, Pietro Vitagliano, the author of DeauthNet and owner of this repository, assume no responsibility for any improper or harmful use of this software. This tool has been developed exclusively for ethical purposes and any usage that violates these principles is neither supported nor endorsed.
 
 ## Software Description
-Deauth Net is a software designed and developed entirely by the owner of this repository, Pietro Vitagliano, as master’s thesis project in Computer Science at the University of Sannio in Benevento, within the scope of Security of Networks and Software Systems. It has been developed to perform de-authentication attacks, in order to demonstrate how easily such an attack can be executed and to provide tools for detecting and blocking this kind of attacks on the machine where the software is running, making it a comprehensive solution for evaluating and identifying de-authentication attacks on Wi-Fi networks.
+DeauthNet is a software designed and developed entirely by the owner of this repository, Pietro Vitagliano, as master’s thesis project in Computer Science at the University of Sannio in Benevento, within the scope of Security of Networks and Software Systems. It has been developed to perform de-authentication attacks, in order to demonstrate how easily such an attack can be executed and to provide tools for detecting and blocking this kind of attacks on the machine where the software is running, making it a comprehensive solution for evaluating and identifying de-authentication attacks on Wi-Fi networks.
 
 ## Credits
-Deauth Net relies on the following python packages:
+DeauthNet relies on the following python packages:
 -	Scapy: Developed by Philippe Biondi, Scapy is a powerful Python library used for packet manipulation and network analysis.
 -	Sortedcontainers: Created by Grant Jenks, this library provides fast and efficient sorted collections.
 -	Rich: Developed by Will McGugan, Rich is a library for rendering rich text and advanced formatting in the terminal.
@@ -42,13 +42,13 @@ To install these dependencies, from the project root directory, open your termin
 Before utilizing any of the three primary functionalities, an initial scan of nearby access points must be conducted, facilitated through the software’s scanning feature utilizing Scapy. Users can customize the scanning process by modifying the /Core/WiFiBandManager/wifi_band_manager_settings.json file, that specifies the frequency bands to scan. This customization allows to scan for specific frequency bands, on which subsequently the attacking, detection and blocking functionalities of the software will focus. This approach ensures flexibility in evaluating and mitigating potential vulnerabilities across desired network frequencies.
 
 ### Main Features
-Deauth Net provides three primary functionalities, besides the access point scan:
+DeauthNet provides three primary functionalities, besides the access point scan:
 1.	De-authentication Attack: This feature allows the execution of de-authentication attacks.
 2.	Attack Detection: This feature detects de-authentication attacks using a sliding time window to monitor the number of de-authentication packets associated with a particular access point.
 3.	Attack Blocking: An extension of the detection feature, this functionality not only detects but also blocks attacks, by blacklisting the attacked access points.
 
 ### Attack Mechanism
-The attack mechanism of Deauth Net is designed to disrupt network connectivity by forcing clients to disconnect from access points. When initiating an attack, user can select one or more access points, but Deauth Net also extends its impact to every access point within the same mesh network of the attacked ones, showing how easy is to affect an entire mesh network’s integrity. Once one or more target are chosen, the software continuously sends de-authentication packets across all associated frequencies, such as both 2.4 GHz and 5 GHz bands, simultaneously disrupting their connectivity. It’s crucial to emphasize that Deauth Net is intended for ethical purposes only, such as educational or research contexts and any unauthorized or malicious use of this tool is explicitly disclaimed and unsupported by the author.
+The attack mechanism of DeauthNet is designed to disrupt network connectivity by forcing clients to disconnect from access points. When initiating an attack, user can select one or more access points, but DeauthNet also extends its impact to every access point within the same mesh network of the attacked ones, showing how easy is to affect an entire mesh network’s integrity. Once one or more target are chosen, the software continuously sends de-authentication packets across all associated frequencies, such as both 2.4 GHz and 5 GHz bands, simultaneously disrupting their connectivity. It’s crucial to emphasize that DeauthNet is intended for ethical purposes only, such as educational or research contexts and any unauthorized or malicious use of this tool is explicitly disclaimed and unsupported by the author.
 
 ### Detection Mechanism
 The detection mechanism relies on a time window to count the number of de-authentication packets associated with a specific access point within that window. Packets outside the window are discarded. If the number of packets exceeds a certain threshold, as defined in a project file, an attack is assumed to be in progress, and the detection functionality notifies the user.
