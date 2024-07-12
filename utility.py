@@ -1,10 +1,10 @@
-# This file is part of the Deauth Net project.
+# This file is part of the DeauthNet project.
 #
-# Deauth Net is free software: you can redistribute it and/or modify it
+# DeauthNet is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free Software Foundation,
 # either version 3 of the License, or (at your option) any later version.
 #
-# Deauth Net is distributed in the hope that it will be useful,
+# DeauthNet is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY this will happen; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #
