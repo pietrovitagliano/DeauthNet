@@ -161,7 +161,7 @@ def initialize_wireless_adapter(wireless_adapter_key: str):
         set_wireless_adapter_mode(wireless_adapter_key, mode=WirelessAdapterModeEnum.MONITOR)
 
 
-def get_info_for_dos_attack(access_point_set: MutableSet[AccessPoint]) -> Optional[tuple[set[str], set[str]]]:
+def get_info_for_deauth_attack(access_point_set: MutableSet[AccessPoint]) -> Optional[tuple[set[str], set[str]]]:
     """
     Extract the information needed to perform a de-authentication attack.
     This information is composed by the SSID and the MAC address of the device to attack.
@@ -229,21 +229,17 @@ def get_info_for_dos_attack(access_point_set: MutableSet[AccessPoint]) -> Option
     #
     # This is done because:
     #   1) the access point may have more than one mac address (one for each frequency);
-    #   2) the access point may have some router extender.
-    #   3) the same SSID can be shared by multiple access points (mesh network).
+    #   2) in case of mesh networks, the same SSID can be shared by multiple access points.
     target_ssid_set: set[str] = set()
     for row_number in row_number_set:
         # Get the SSID of the chosen access point
         chosen_ssid: str = list(access_point_set)[row_number - 1].ssid
 
-        # Get all the access points with an SSID related to the chosen one
-        related_access_point_set: set[AccessPoint] = set(
-            filter(lambda ap: chosen_ssid.lower() in ap.ssid.lower() or ap.ssid.lower() in chosen_ssid.lower(),
-                   access_point_set)
-        )
+        # Get all the access point MACs with the same SSID of the chosen one
+        related_ap_mac_set: set[str] = {ap.mac for ap in access_point_set if ap.ssid.lower() == chosen_ssid.lower()}
 
         # Add the SSIDs to the target set
-        target_ssid_set = target_ssid_set.union({access_point.ssid for access_point in related_access_point_set})
+        target_ssid_set = target_ssid_set.union(related_ap_mac_set)
 
     return target_ssid_set, victim_mac_set
 
@@ -318,7 +314,7 @@ def perform_deauth_net_function(option: MenuOptionEnum,
 
         # Perform a de-authentication DOS attack towards an access point
         case MenuOptionEnum.DEAUTH_DOS_WIFI:
-            dos_attack_info: tuple[set[str], set[str]] = get_info_for_dos_attack(
+            dos_attack_info: tuple[set[str], set[str]] = get_info_for_deauth_attack(
                 access_point_set=access_point_scanner.access_point_set
             )
 
