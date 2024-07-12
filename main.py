@@ -235,11 +235,8 @@ def get_info_for_deauth_attack(access_point_set: MutableSet[AccessPoint]) -> Opt
         # Get the SSID of the chosen access point
         chosen_ssid: str = list(access_point_set)[row_number - 1].ssid
 
-        # Get all the access point MACs with the same SSID of the chosen one
-        related_ap_mac_set: set[str] = {ap.mac for ap in access_point_set if ap.ssid.lower() == chosen_ssid.lower()}
-
         # Add the SSIDs to the target set
-        target_ssid_set = target_ssid_set.union(related_ap_mac_set)
+        target_ssid_set.add(chosen_ssid)
 
     return target_ssid_set, victim_mac_set
 
