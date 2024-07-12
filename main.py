@@ -36,10 +36,9 @@ from WiFiFunctions.wireless_utility import (set_wireless_adapter_mode, WirelessA
                                             BROADCAST_MAC, MAC_REGEX_PATTERN,
                                             WIFI_ADAPTER_ERROR_MESSAGE, check_and_set_wifi_adapter_mode)
 
-from exceptions import (NoRootPrivilegesException,
-                        RequirementInstallationFailedException,
-                        WirelessAdapterNotFoundException)
 from utility import find_file
+from exceptions import (NoRootPrivilegesException, RequirementInstallationFailedException,
+                        WirelessAdapterNotFoundException)
 
 
 def root_privileges_check():
