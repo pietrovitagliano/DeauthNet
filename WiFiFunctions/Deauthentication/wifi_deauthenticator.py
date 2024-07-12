@@ -149,7 +149,11 @@ class WiFiDeauthenticator:
         :param victim_mac_set: The set of MAC addresses of the victim devices
         """
 
-        # Get all the access points, among the scanned ones, with the SSIDs in the set
+        # Get all the access points, among the scanned ones, with the SSIDs in the set.
+        # This is done because:
+        #   1) the access point may have more than one mac address (one for each frequency)
+        #   2) in case of mesh networks, the same SSID can be shared
+        #   by multiple access points (that means by multiple MAC addresses)
         target_access_point_list: list[AccessPoint] = list(filter(lambda ap: ap.ssid in ap_ssid_target_set,
                                                                   self._access_points_set))
 
@@ -159,7 +163,8 @@ class WiFiDeauthenticator:
         # before sending the packets
         packet_list_by_channel_dict: dict[int, list[Packet]] = {}
         for access_point in target_access_point_list:
-            # Create a de-authentication packet for each victim device
+            # For each access point target, create a de-authentication packet list
+            # targeting all the victim devices.
             packet_list: list[Packet] = [self._create_deauth_packet(access_point_mac=access_point.mac,
                                                                     victim_mac=victim_mac)
                                          for victim_mac in victim_mac_set]
