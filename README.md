@@ -21,7 +21,7 @@ DeauthNet relies on the following python packages:
 #### Linux System Dependencies
 -	net-tools
 -	wireless-tools
--	ebtables-tools
+-	ebtables
 
 To install these dependencies, execute the following commands in your terminal:
 
