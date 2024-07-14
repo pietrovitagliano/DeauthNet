@@ -190,8 +190,7 @@ class WiFiDeauthenticator:
 
     def _send_packets(self, packet_list: list[Packet], channel: int):
         """
-        Send the packets at level 2, using the given channel. If a lock is given, it's used to synchronize the access
-        to the shell command to change the channel.
+        Send the packets at level 2, using the given channel.
         :param packet_list: The list of packets to send
         :param channel: The channel to use for the attack
         """
